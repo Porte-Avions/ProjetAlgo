@@ -6,6 +6,7 @@ import copy
 import networkx as nx
 import matplotlib.pyplot as plt
 import csv
+import os
    
   
 # Defining a Class
@@ -149,9 +150,12 @@ organize_matrice(matrice)
 affiche_matrice(matrice)
 dico = info_matrice(matrice)
 
+username = os.environ.get('USERNAME')
+
+
 print(dico)
 
-with open('C:\\Users\\Utilisateur\\Desktop\\myfile.csv', 'w', newline='') as file:
+with open('C:\\Users\\'+username+'\\Desktop\\myfile.csv', 'w', newline='') as file:
     mywriter = csv.writer(file, delimiter=',')
     mywriter.writerows(matrice)
 
