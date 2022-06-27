@@ -155,8 +155,7 @@ def mutation(chromosone, probMutation, nbVille):
 
 def populationInitial(matrice):
     sommet = [0, 1, 3, 8, 0]
-    sommetDepart = 0
-    chromosone = generate_matrice(5, 10)
+    chromosone = generate_matrice(len(sommet), 10)
     print(len(chromosone))
     
     for k in range(0,len(chromosone)):
@@ -165,14 +164,14 @@ def populationInitial(matrice):
     print(chromosone)
     return chromosone
 
-def fitness(chromosone):
+def fitness(chromosome):
     distance = 0
-    for i in range(0,len(chromosone)):
-        for j in range(0, len(chromosone)):
-            if chromosone[i][j] != 0:
-                distance += chromosone[i][j][1]
-        
+    for i in range(len(chromosome)):
+        distance += chromosome[i][chromosome[i+1]][1]
+
     return distance
+    
+
 
 
 
