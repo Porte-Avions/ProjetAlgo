@@ -154,17 +154,14 @@ def mutation(chromosone, probMutation, nbVille):
         chromosone[firstGene], chromosone[secondGene] = chromosone[secondGene], chromosone[firstGene]
 
 def populationInitial(matrice):
-    sommet = [0, 1, 3, 8]
+    sommet = [0, 1, 3, 8, 0]
     sommetDepart = 0
-    chromosone = generate_matrice(4, 10)
+    chromosone = generate_matrice(5, 10)
     print(len(chromosone))
+    
     for k in range(0,len(chromosone)):
-
-    '''for i in range(0,len(matrice)):
-        if i in sommet:
-            for k in range(0,len(chromosone)):
-                for j in range(0,len(matrice)):
-                    chromosone[k][j] = matrice[i][j]'''
+        for j in range(0,len(matrice)):
+                chromosone[k][j] = matrice[sommet[k]][j]
     print(chromosone)
     return chromosone
 
