@@ -37,12 +37,6 @@ class GraphVisualization:
         G.add_edges_from(self.visual)
         nx.draw_networkx(G)
         plt.show()
-        
-def voisinsSommetGrapheMatrice(matrice, sommet):
-    liste = matrice[sommet]
-    voisins = \
-        [i for i, value in enumerate(liste) if liste[i] != 0] #SOLUTION
-    return voisins
 
 def field(matrice, i, j):
     inf = 1
@@ -178,12 +172,7 @@ def fitness(chromosome):
                     distance += chromosome[i][dest][1]
             except:
                 pass
-
     return distance
-    
-
-
-
 
 
 matrice = generate_matrice(10, 10)
