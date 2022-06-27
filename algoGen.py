@@ -158,11 +158,13 @@ def populationInitial(matrice):
     sommetDepart = 0
     chromosone = generate_matrice(4, 10)
     print(len(chromosone))
-    for i in range(0,len(matrice)):
+    for k in range(0,len(chromosone)):
+
+    '''for i in range(0,len(matrice)):
         if i in sommet:
             for k in range(0,len(chromosone)):
                 for j in range(0,len(matrice)):
-                    chromosone[k][j] = matrice[i][j]
+                    chromosone[k][j] = matrice[i][j]'''
     print(chromosone)
     return chromosone
 
@@ -170,7 +172,7 @@ def fitness(chromosone):
     distance = 0
     for i in range(0,len(chromosone)):
         for j in range(0, len(chromosone)):
-            if matrice[i][j] != 0:
+            if chromosone[i][j] != 0:
                 distance += chromosone[i][j][1]
         
     return distance
@@ -186,9 +188,9 @@ dico = info_matrice(matrice)
 
 
 
-chromonsome = populationInitial(matrice)
+chromosome = populationInitial(matrice)
 
-distance = fitness(chromonsome)
+distance = fitness(chromosome)
 
 print(distance)
 '''G = GraphVisualization()
