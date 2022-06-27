@@ -166,8 +166,18 @@ def populationInitial(matrice):
 
 def fitness(chromosome):
     distance = 0
+    actuel = 0
+    dest = 0
     for i in range(len(chromosome)):
-        distance += chromosome[i][chromosome[i+1]][1]
+        for j in range(0, 10):
+            if chromosome[i][j] == 0:
+                actuel = j
+            try:
+                if chromosome[i+1][j] == 0:
+                    dest = j
+                    distance += chromosome[i][dest][1]
+            except:
+                pass
 
     return distance
     
