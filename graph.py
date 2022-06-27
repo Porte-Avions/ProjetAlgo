@@ -5,8 +5,7 @@ from numpy.random import choice
 import copy
 import networkx as nx
 import matplotlib.pyplot as plt
-import csv
-import os
+import pickle
    
   
 # Defining a Class
@@ -144,20 +143,28 @@ def info_matrice(matrice):
 
 
 
-matrice = generate_matrice(10, 10)
-complete_matrice(matrice, 10)
+matrice = generate_matrice(1000, 1000)
+complete_matrice(matrice, 1000)
 organize_matrice(matrice)
-affiche_matrice(matrice)
+#affiche_matrice(matrice)
 dico = info_matrice(matrice)
 
-username = os.environ.get('USERNAME')
 
 
-print(dico)
+#print(dico)
 
-with open('C:\\Users\\'+username+'\\Desktop\\myfile.csv', 'w', newline='') as file:
-    mywriter = csv.writer(file, delimiter=',')
-    mywriter.writerows(matrice)
+#with open('C:\\Users\\Utilisateur\\Desktop\\myfile.csv', 'w', newline='') as file:
+    #mywriter = csv.writer(file, delimiter=',')
+    #mywriter.writerows(matrice)
+"""
+with open("C:\\Users\\Utilisateur\\Desktop\\matrice.txt", 'w') as f:
+    for s in matrice:
+        f.write(str(s) + '\n')
+"""
+
+open_file = open("C:\\Users\\Utilisateur\\Desktop\\matrice.pkl", "wb")
+pickle.dump(matrice, open_file)
+open_file.close()
 
 # Code
 G = GraphVisualization()
@@ -169,4 +176,9 @@ for sommet in range(len(matrice)):
     for v in voisins:
         G.addEdge(sommet, v)
     
-G.visualize()
+#G.visualize()
+
+matrice2 = generate_matrice(1000, 1000)
+
+
+
