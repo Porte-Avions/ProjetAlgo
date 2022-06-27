@@ -140,23 +140,27 @@ def info_matrice(matrice):
         _map[i] = copy.deepcopy(_list)
     return _map
 
-def mutation(chromosone, probMutation, nbVille):
+def mutation(chromosome, probMutation):
     
     if probMutation > random.randint(0,100):
-        firstGene = random.randint(0, nbVille)
-        secondGene = random.randint(0, nbVille)
-        chromosone[firstGene], chromosone[secondGene] = chromosone[secondGene], chromosone[firstGene]
+        firstGene = random.randint(1, len(chromosome)-2)
+        secondGene = random.randint(1, len(chromosome)-2)
+        chromosome[firstGene], chromosome[secondGene] = chromosome[secondGene], chromosome[firstGene]
+
+        return chromosome
+
+    return chromosome
 
 def populationInitial(matrice):
-    sommet = [0, 1, 3, 8, 0]
-    chromosone = generate_matrice(len(sommet), 10)
-    print(len(chromosone))
+    sommet = [0, 1, 3, 8, 5, 0]
+    chromosome = generate_matrice(len(sommet), 10)
+    print(len(chromosome))
     
-    for k in range(0,len(chromosone)):
+    for k in range(0,len(chromosome)):
         for j in range(0,len(matrice)):
-                chromosone[k][j] = matrice[sommet[k]][j]
-    print(chromosone)
-    return chromosone
+                chromosome[k][j] = matrice[sommet[k]][j]
+    print(chromosome)
+    return chromosome
 
 def fitness(chromosome):
     distance = 0
@@ -188,6 +192,15 @@ chromosome = populationInitial(matrice)
 distance = fitness(chromosome)
 
 print(distance)
+
+chromosome = mutation(chromosome, 100)
+
+distance = fitness(chromosome)
+
+print(distance)
+
+
+
 '''G = GraphVisualization()
 
 
