@@ -1,4 +1,5 @@
 import time
+from turtle import distance
 import numpy as np
 from random import randint, randrange
 import random
@@ -10,7 +11,33 @@ import csv
 import os
 
 start = time.time() #Début du timer
-
+# Defining a Class
+class GraphVisualization:
+   
+    def __init__(self):
+          
+        # visual is a list which stores all 
+        # the set of edges that constitutes a
+        # graph
+        self.visual = []
+          
+    # addEdge function inputs the vertices of an
+    # edge and appends it to the visual list
+    def addEdge(self, a, b):
+        temp = [a, b]
+        self.visual.append(temp)
+          
+    # In visualize function G is an object of
+    # class Graph given by networkx G.add_edges_from(visual)
+    # creates a graph with a given list
+    # nx.draw_networkx(G) - plots the graph
+    # plt.show() - displays the graph
+    def visualize(self):
+        G = nx.Graph()
+        G.add_edges_from(self.visual)
+        nx.draw_networkx(G)
+        plt.show()
+        
 def voisinsSommetGrapheMatrice(matrice, sommet):
     liste = matrice[sommet]
     voisins = \
@@ -62,7 +89,10 @@ def generate_matrice(M,N):
         
 def complete_matrice(matrice, M):
     for i in range(M):
-        _nb_element = 2
+        for j in range(M):
+            if i != j :
+                field(matrice, i, j)
+    '''_nb_element = 2
         _element = random.sample(range(M), _nb_element)
         try:
             for j in _element:
@@ -75,7 +105,7 @@ def complete_matrice(matrice, M):
             for j in _element:
                 if i != j :
                     field(matrice, i, j)
-        _element = []
+        _element = []'''
     return matrice
 
 def organize_matrice(matrice):
@@ -117,16 +147,32 @@ def info_matrice(matrice):
     return _map
 
 def mutation(chromosone, probMutation, nbVille):
+    
     if probMutation > random.randint(0,100):
         firstGene = random.randint(0, nbVille)
         secondGene = random.randint(0, nbVille)
-        chromosone[]
+        chromosone[firstGene], chromosone[secondGene] = chromosone[secondGene], chromosone[firstGene]
 
+def populationInitial(matrice):
+    sommet = [0, 1, 3, 8]
+    sommetDepart = 0
+    chromosone = generate_matrice(4, 10)
+    print(len(chromosone))
+    for i in range(0,len(matrice)):
+        if i in sommet:
+            for k in range(0,len(chromosone)):
+                for j in range(0,len(matrice)):
+                    chromosone[k][j] = matrice[i][j]
+    print(chromosone)
+    return chromosone
 
 def fitness(chromosone):
     distance = 0
     for i in range(0,len(chromosone)):
-        distance += chromosone[i]["distance"]
+        for j in range(0, len(chromosone)):
+            if matrice[i][j] != 0:
+                distance += chromosone[i][j][1]
+        
     return distance
 
 
@@ -138,7 +184,25 @@ organize_matrice(matrice)
 affiche_matrice(matrice)
 dico = info_matrice(matrice)
 
-print(dico)
+
+
+chromonsome = populationInitial(matrice)
+
+distance = fitness(chromonsome)
+
+print(distance)
+'''G = GraphVisualization()
+
+
+for sommet in range(len(matrice)):
+    voisins = voisinsSommetGrapheMatrice(matrice, sommet)      # on procède en deux temps, car
+    print("sommet", str(sommet), ":", str([v for v in voisins])) # les indices commencent à 0
+    for v in voisins:
+        G.addEdge(sommet, v)
+    
+G.visualize()
+
+print(distance)'''
 
 
 
