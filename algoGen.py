@@ -38,6 +38,13 @@ class GraphVisualization:
         nx.draw_networkx(G)
         plt.show()
 
+# Calcul voisins
+def voisinsSommetGrapheMatrice(matrice, sommet):
+    liste = matrice[sommet]
+    voisins = \
+        [i for i, value in enumerate(liste) if liste[i] != 0] #SOLUTION
+    return voisins
+
 def field(matrice, i, j):
     inf = 1
     sup = 50
@@ -151,14 +158,28 @@ def mutation(chromosome, probMutation):
 
     return chromosome
 
-def populationInitial(matrice):
-    sommet = [0, 1, 3, 8, 5, 0]
-    chromosome = generate_matrice(len(sommet), 10)
+def generateTournee(tailleMatrice):
+    tournee = []
+    start = input("Entrez le point de départ : ") 
+    tournee.append(int(start))
+    tailleTournee = random.randint(1, len(tailleMatrice)/2)
+    List = [i for i in range(0, len(tailleMatrice))]
+    List.remove(int(start))
+    for j in range(tailleTournee):
+        newPoint = random.choice(List)
+        List.remove(newPoint)
+        tournee.append(newPoint)
+    tournee.append(int(start))
+    print(tournee)
+    return tournee
+
+def populationInitial(matrice, tournee):
+    chromosome = generate_matrice(len(tournee), 10)
     print(len(chromosome))
     
     for k in range(0,len(chromosome)):
         for j in range(0,len(matrice)):
-                chromosome[k][j] = matrice[sommet[k]][j]
+                chromosome[k][j] = matrice[tournee[k]][j]
     print(chromosome)
     return chromosome
 
@@ -186,8 +207,8 @@ affiche_matrice(matrice)
 dico = info_matrice(matrice)
 
 
-
-chromosome = populationInitial(matrice)
+tournee = generateTournee(matrice)
+chromosome = populationInitial(matrice, tournee)
 
 distance = fitness(chromosome)
 
@@ -210,10 +231,8 @@ for sommet in range(len(matrice)):
     for v in voisins:
         G.addEdge(sommet, v)
     
-G.visualize()
-
-print(distance)'''
-
+    
+G.visualize()'''
 
 
 print(time.time() - start) #Affichage du temps en seconde
