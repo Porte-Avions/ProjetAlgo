@@ -170,25 +170,31 @@ def generateTournee(tailleMatrice):
         List.remove(newPoint)
         tournee.append(newPoint)
     tournee.append(int(start))
-    print(tournee)
+    print("Itinéraire initial : " + str(tournee))
     return tournee
 
 def populationInitial(matrice, tournee):
-    chromosome = generate_matrice(len(tournee), 10)
-    print(len(chromosome))
-    
+    chromosome = generate_matrice(len(tournee), len(matrice[0]))    
     for k in range(0,len(chromosome)):
         for j in range(0,len(matrice)):
                 chromosome[k][j] = matrice[tournee[k]][j]
-    print(chromosome)
     return chromosome
+
+def afficheTournee(chromosome):
+    tournee = []
+    for i in range(0, len(chromosome)):
+        for j in range(0, len(chromosome[0])):
+            if chromosome[i][j] == 0:
+                tournee.append(j)
+                break
+    print("Tournée actuelle : " + str(tournee))
 
 def fitness(chromosome):
     distance = 0
     actuel = 0
     dest = 0
     for i in range(len(chromosome)):
-        for j in range(0, 10):
+        for j in range(0, len(chromosome[0])):
             if chromosome[i][j] == 0:
                 actuel = j
             try:
@@ -201,10 +207,10 @@ def fitness(chromosome):
 
 
 matrice = generate_matrice(10, 10)
-complete_matrice(matrice, 10)
+complete_matrice(matrice, len(matrice[0]))
 organize_matrice(matrice)
-affiche_matrice(matrice)
-dico = info_matrice(matrice)
+#affiche_matrice(matrice)
+#dico = info_matrice(matrice)
 
 
 tournee = generateTournee(matrice)
@@ -212,13 +218,14 @@ chromosome = populationInitial(matrice, tournee)
 
 distance = fitness(chromosome)
 
-print(distance)
+print("Distance initiale : "+ str(distance))
 
 chromosome = mutation(chromosome, 100)
 
 distance = fitness(chromosome)
 
-print(distance)
+afficheTournee(chromosome)
+print("Distance après mutation : "+ str(distance))
 
 
 
