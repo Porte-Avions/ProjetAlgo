@@ -1,3 +1,4 @@
+from dis import dis
 from itertools import starmap
 import time
 from turtle import distance
@@ -147,9 +148,9 @@ def info_matrice(matrice):
         _map[i] = copy.deepcopy(_list)
     return _map
 
-def mutation(chromosome, probMutation):
+def mutation(chromosome):
     
-    if probMutation > random.randint(0,100):
+    if 100 >= random.randint(0,100):
         firstGene = random.randint(1, len(chromosome)-2)
         secondGene = random.randint(1, len(chromosome)-2)
         chromosome[firstGene], chromosome[secondGene] = chromosome[secondGene], chromosome[firstGene]
@@ -158,7 +159,7 @@ def mutation(chromosome, probMutation):
 
     return chromosome
 
-def generateTournee(tailleMatrice, startTournee, shuffle):
+def generateTournee(tailleMatrice, startTournee):
     tournee = []
     
     tailleTournee = random.randint(1, len(tailleMatrice)/2)
@@ -193,7 +194,7 @@ def afficheTournee(chromosome):
             if chromosome[i][j] == 0:
                 tournee.append(j)
                 break
-    print("Tournée actuelle : " + str(tournee))
+    return tournee
 
 def fitness(chromosome):
     distance = 0
@@ -211,10 +212,30 @@ def fitness(chromosome):
                 pass
     return distance
 
-def algoGenetique(nbGeneration, chromosome1, chromosome2):
-    chromosome3 = generate_matrice(len(chromosome1), len(chromosome1[0]))   
+def algoGenetique(nbGeneration, matrice):
+    startTournee = input("Entrez le point de départ : ") 
+
+    tournee, tournee2 = generateTournee(matrice, startTournee)
+
+    chromosome1 = populationInitial(matrice, tournee)
+    distance = fitness(chromosome1)
+
+    chromosome2 = populationInitial(matrice, tournee2)
+    distance2 = fitness(chromosome2)
+
+    if distance < distance2:
+        print("Meilleur chemin initiale : " + str(tournee))
+        print("Meilleur distance total tournée initiale : "+ str(distance))
+    else:
+        print("Meilleur chemin initiale : " + str(tournee2))
+        print("Meilleur distance total tournée initiale : "+ str(distance2))
+
+
+    chromosome3 = generate_matrice(len(chromosome1), len(chromosome1[0]))
+
     for i in range(1, nbGeneration+1):
         print("Génération " +str(i))
+
 
 def comparaisonGen(chromosome1, chromosome2, chromosome3):
     distance1 = fitness(chromosome1)
@@ -240,22 +261,16 @@ organize_matrice(matrice)
 #affiche_matrice(matrice)
 #dico = info_matrice(matrice)
 
-startTournee = input("Entrez le point de départ : ") 
 
-tournee, tournee2 = generateTournee(matrice, startTournee, False)
 
 start = time.time() #Début du timer
 
-chromosome1 = populationInitial(matrice, tournee)
-chromosome2 = populationInitial(matrice, tournee)
-
-
-distance = fitness(chromosome1)
+algoGenetique(50, matrice)
 
 print("Distance initiale : "+ str(distance))
 
 chromosome = mutation(chromosome1, 100)  #100 = ProbMutation
-chromosome1, chromosome2 = comparaisonGen(chromosome1, chromosome2, chromosome3)
+
 distance = fitness(chromosome)
 print("Distance après mutation : "+ str(distance))
 
