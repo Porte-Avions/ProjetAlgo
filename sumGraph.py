@@ -40,20 +40,8 @@ def completMatrice(lenght, city):
         x = city[j]
         matrice_complet[j][x] = 1
         
-    affiche_matrice(matrice_complet)
-    
-    G = GraphVisualization()
 
-    for sommet in range(len(matrice_complet)):
-        voisins = voisinsSommetGrapheMatrice(matrice_complet, sommet)      # on procède en deux temps, car
-        print("sommet", str(sommet), ":", str([v for v in voisins])) # les indices commencent à 0
-        for v in voisins:
-            s = city[sommet]
-            G.addEdge(s, v)
-        
-    G.visualize()
-    
-city = [22, 782, 456, 810, 892] 
+city = [22, 782, 456, 810, 892, 52, 825, 320, 952, 853, 742, 12, 259, 963, 201, 542, 568, 745, 123, 529] 
 completMatrice(1000, city)
     
 """affiche_matrice(matrice_complet)
@@ -68,3 +56,9 @@ for sommet in range(len(matrice_complet)):
         G.addEdge(s, v)
     
 G.visualize()"""
+
+
+
+test={
+    22:{ 782: [437, 638, 24, 888, 598, 630, 420, 293, 233, 445, 469, 814, 58]}
+}
