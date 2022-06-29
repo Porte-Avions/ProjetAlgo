@@ -155,8 +155,8 @@ def dijkstra_matrice(matrice):
         dico = {}
     return _map
 
-matrice = generate_matrice(10, 10)
-complete_matrice(matrice, 10)
+matrice = generate_matrice(1000, 1000)
+complete_matrice(matrice, 1000)
 organize_matrice(matrice)
 #affiche_matrice(matrice)
 dico = dijkstra_matrice(matrice)
