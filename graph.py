@@ -7,8 +7,8 @@ import copy
 import networkx as nx
 import matplotlib.pyplot as plt
 from dijkstra import *
-   
-  
+from itertools import combinations
+
 # Defining a Class
 class GraphVisualization:
    
@@ -159,16 +159,143 @@ def dijkstra_matrice(matrice):
         dico = {}
     return _map
 
-matrice = generate_matrice(1000, 1000)
-complete_matrice(matrice, 1000)
+def completMatriceTournee(lenght, city):
+
+    matrice_complet = generate_matrice(len(city), lenght)
+
+    temp = combinations(city, 2)
+
+    for i in list(temp):
+        longueur,chemin = dij_rec(dico, i[0], i[1])
+        print('Plus court chemin de ',i,  'est: ',chemin)
+        champ = []
+        dist = 0
+        time = 0
+        cost = 0
+        for elem in range(len(chemin)+1):
+            try:
+                for k in range(len(_dico[chemin[elem]])):
+                    if _dico[chemin[elem]][k]["voisin"] == chemin[elem+1] :
+                        dist += _dico[chemin[elem]][k]["distance"]
+                        time += _dico[chemin[elem]][k]["temps"]
+                        cost += _dico[chemin[elem]][k]["total"]
+                        break
+            except:
+                break
+        x = city.index(i[0])
+        y = city.index(i[1])
+        champ.append(dist)
+        champ.append(time)
+        champ.append(round(cost, 2))
+        print(champ)
+        matrice_complet[x][i[1]] = champ
+        matrice_complet[y][i[0]] = champ
+        
+    for j in range(len(city)):
+        x = city[j]
+        matrice_complet[j][x] = 1
+
+    return matrice_complet
+
+def mutation(chromosome):
+    
+    if 100 >= random.randint(0,100):
+        firstGene = random.randint(1, len(chromosome)-2)
+        secondGene = random.randint(1, len(chromosome)-2)
+        chromosome[firstGene], chromosome[secondGene] = chromosome[secondGene], chromosome[firstGene]
+
+        return chromosome
+
+    return chromosome
+
+def generateTournee(tailleMatrice, startTournee):
+    tournee = []
+    
+    tailleTournee = 4 #random.randint(1, len(tailleMatrice)/2)
+    List = [i for i in range(0, len(tailleMatrice))]
+    List.remove(int(startTournee))
+    for j in range(tailleTournee):
+        newPoint = random.choice(List)
+        List.remove(newPoint)
+        tournee.append(newPoint)
+    tournee.insert(0, int(startTournee))
+    #tournee.append(int(startTournee))
+
+    return tournee
+
+def populationInitial(matrice, tournee):
+    chromosome = generate_matrice(len(tournee), len(matrice[0]))    
+    for k in range(0,len(chromosome)):
+        for j in range(0,len(matrice)):
+                chromosome[k][j] = matrice[tournee[k]][j]
+    return chromosome
+
+def afficheTournee(chromosome):
+    tournee = []
+    for i in range(0, len(chromosome)):
+        for j in range(0, len(chromosome[0])):
+            if chromosome[i][j] == 0:
+                tournee.append(j)
+                break
+    return tournee
+
+def fitness(chromosome):
+    distance = 0
+    actuel = 0
+    dest = 0
+    for i in range(len(chromosome)):
+        for j in range(0, len(chromosome[0])):
+            if chromosome[i][j] == 1:
+                actuel = j
+            try:
+                if chromosome[i+1][j] == 1:
+                    dest = j
+                    distance += chromosome[i][dest][0]
+            except:
+                pass
+    return distance
+
+def algoGenetique(nbGeneration, matrice):
+    startTournee = input("Entrez le point de départ : ") 
+
+    tournee = generateTournee(matrice, startTournee)
+
+    chromosome1 = completMatriceTournee(len(matrice), tournee)
+    distance = fitness(chromosome1)
+
+    print("Chemin initiale : " + str(tournee))
+    print("Distance total tournée initiale : "+ str(distance))
+
+    for i in range(1, nbGeneration+1):
+        print("Génération " +str(i))
+
+
+def comparaisonGen(chromosome1, chromosome2, chromosome3):
+    distance1 = fitness(chromosome1)
+    distance2 = fitness(chromosome2)
+    distance3 = fitness(chromosome3)
+
+    if distance1 < distance3:
+        chromosome1 = chromosome3
+    elif distance2 < distance3:
+        chromosome2 = chromosome2
+    
+    return chromosome1, chromosome2
+
+matrice = generate_matrice(20, 20)
+complete_matrice(matrice, 20)
 complete_point(matrice)
 organize_matrice(matrice)
 #affiche_matrice(matrice)
 dico = dijkstra_matrice(matrice)
 _dico = dico_matrice(matrice)
 
+
+algoGenetique(500, matrice)
+
 print(dico)
 print(_dico)
+
 
 
 # Code

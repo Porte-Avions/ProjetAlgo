@@ -162,23 +162,17 @@ def mutation(chromosome):
 def generateTournee(tailleMatrice, startTournee):
     tournee = []
     
-    tailleTournee = random.randint(1, len(tailleMatrice)/2)
+    tailleTournee = 50 #random.randint(1, len(tailleMatrice)/2)
     List = [i for i in range(0, len(tailleMatrice))]
     List.remove(int(startTournee))
     for j in range(tailleTournee):
         newPoint = random.choice(List)
         List.remove(newPoint)
         tournee.append(newPoint)
-    tournee2 = copy.copy(tournee)
-    random.shuffle(tournee2)
     tournee.insert(0, int(startTournee))
-    tournee.append(int(startTournee))
-    tournee2.insert(0, int(startTournee))
-    tournee2.append(int(startTournee))
-    print("Itinéraire initial : " + str(tournee))
-    print("Itinéraire 2 : " + str(tournee2))
+    #tournee.append(int(startTournee))
 
-    return tournee, tournee2
+    return tournee
 
 def populationInitial(matrice, tournee):
     chromosome = generate_matrice(len(tournee), len(matrice[0]))    
@@ -220,18 +214,8 @@ def algoGenetique(nbGeneration, matrice):
     chromosome1 = populationInitial(matrice, tournee)
     distance = fitness(chromosome1)
 
-    chromosome2 = populationInitial(matrice, tournee2)
-    distance2 = fitness(chromosome2)
-
-    if distance < distance2:
-        print("Meilleur chemin initiale : " + str(tournee))
-        print("Meilleur distance total tournée initiale : "+ str(distance))
-    else:
-        print("Meilleur chemin initiale : " + str(tournee2))
-        print("Meilleur distance total tournée initiale : "+ str(distance2))
-
-
-    chromosome3 = generate_matrice(len(chromosome1), len(chromosome1[0]))
+    print("Meilleur chemin initiale : " + str(tournee))
+    print("Meilleur distance total tournée initiale : "+ str(distance))
 
     for i in range(1, nbGeneration+1):
         print("Génération " +str(i))
