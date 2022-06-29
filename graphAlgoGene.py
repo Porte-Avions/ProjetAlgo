@@ -1,7 +1,4 @@
-from dis import dis
-from itertools import starmap
-import time
-from turtle import distance
+from turtle import position
 import numpy as np
 from random import randint, randrange
 import random
@@ -9,8 +6,8 @@ from numpy.random import choice
 import copy
 import networkx as nx
 import matplotlib.pyplot as plt
-import csv
-import os
+from dijkstra import *
+from itertools import combinations
 
 # Defining a Class
 class GraphVisualization:
@@ -38,7 +35,7 @@ class GraphVisualization:
         G.add_edges_from(self.visual)
         nx.draw_networkx(G)
         plt.show()
-
+        
 # Calcul voisins
 def voisinsSommetGrapheMatrice(matrice, sommet):
     liste = matrice[sommet]
@@ -91,10 +88,7 @@ def generate_matrice(M,N):
         
 def complete_matrice(matrice, M):
     for i in range(M):
-        for j in range(M):
-            if i != j :
-                field(matrice, i, j)
-    '''_nb_element = 2
+        _nb_element = 2
         _element = random.sample(range(M), _nb_element)
         try:
             for j in _element:
@@ -107,15 +101,19 @@ def complete_matrice(matrice, M):
             for j in _element:
                 if i != j :
                     field(matrice, i, j)
-        _element = []'''
+        _element = []        
     return matrice
+
+def complete_point(matrice):
+    for i in range(1, len(matrice)):
+        field(matrice, 0, i)
 
 def organize_matrice(matrice):
     for i in range(0, len(matrice)):
         for j in range(i+1, len(matrice)):
             matrice[j][i] = matrice [i][j]                      
             
-def info_matrice(matrice):
+def dico_matrice(matrice):
     _map = {}
     _list = []
 
@@ -148,6 +146,57 @@ def info_matrice(matrice):
         _map[i] = copy.deepcopy(_list)
     return _map
 
+def dijkstra_matrice(matrice):
+    _map = {}
+
+    dico = {}
+    
+    for i in range(0, len(matrice)):
+        for j in range(0, len(matrice)):
+            if matrice[i][j] != 0:
+                dico.update( {j : matrice[i][j][1]}) 
+        _map[i] = copy.deepcopy(dico)
+        dico = {}
+    return _map
+
+def completMatriceTournee(lenght, city):
+
+    matrice_complet = generate_matrice(len(city), lenght)
+
+    temp = combinations(city, 2)
+
+    for i in list(temp):
+        longueur,chemin = dij_rec(dico, i[0], i[1])
+        print('Plus court chemin de ',i,  'est: ',chemin)
+        champ = []
+        dist = 0
+        time = 0
+        cost = 0
+        for elem in range(len(chemin)+1):
+            try:
+                for k in range(len(_dico[chemin[elem]])):
+                    if _dico[chemin[elem]][k]["voisin"] == chemin[elem+1] :
+                        dist += _dico[chemin[elem]][k]["distance"]
+                        time += _dico[chemin[elem]][k]["temps"]
+                        cost += _dico[chemin[elem]][k]["total"]
+                        break
+            except:
+                break
+        x = city.index(i[0])
+        y = city.index(i[1])
+        champ.append(dist)
+        champ.append(time)
+        champ.append(round(cost, 2))
+        print(champ)
+        matrice_complet[x][i[1]] = champ
+        matrice_complet[y][i[0]] = champ
+        
+    for j in range(len(city)):
+        x = city[j]
+        matrice_complet[j][x] = 1
+
+    return matrice_complet
+
 def mutation(chromosome):
     
     if 100 >= random.randint(0,100):
@@ -162,7 +211,7 @@ def mutation(chromosome):
 def generateTournee(tailleMatrice, startTournee):
     tournee = []
     
-    tailleTournee = 50 #random.randint(1, len(tailleMatrice)/2)
+    tailleTournee = 10 #random.randint(1, len(tailleMatrice)/2)
     List = [i for i in range(0, len(tailleMatrice))]
     List.remove(int(startTournee))
     for j in range(tailleTournee):
@@ -185,7 +234,7 @@ def afficheTournee(chromosome):
     tournee = []
     for i in range(0, len(chromosome)):
         for j in range(0, len(chromosome[0])):
-            if chromosome[i][j] == 0:
+            if chromosome[i][j] == 1:
                 tournee.append(j)
                 break
     return tournee
@@ -196,12 +245,12 @@ def fitness(chromosome):
     dest = 0
     for i in range(len(chromosome)):
         for j in range(0, len(chromosome[0])):
-            if chromosome[i][j] == 0:
+            if chromosome[i][j] == 1:
                 actuel = j
             try:
-                if chromosome[i+1][j] == 0:
+                if chromosome[i+1][j] == 1:
                     dest = j
-                    distance += chromosome[i][dest][1]
+                    distance += chromosome[i][dest][0]
             except:
                 pass
     return distance
@@ -209,60 +258,47 @@ def fitness(chromosome):
 def algoGenetique(nbGeneration, matrice):
     startTournee = input("Entrez le point de départ : ") 
 
-    tournee, tournee2 = generateTournee(matrice, startTournee)
+    tournee = generateTournee(matrice, startTournee)
 
-    chromosome1 = populationInitial(matrice, tournee)
-    distance = fitness(chromosome1)
+    chromosome1 = completMatriceTournee(len(matrice), tournee)
+    index0 = chromosome1[0]
+    chromosome1.append(index0)
 
-    print("Meilleur chemin initiale : " + str(tournee))
-    print("Meilleur distance total tournée initiale : "+ str(distance))
+    print("Chemin initiale : " + str(afficheTournee(chromosome1)))
+    print("Distance total tournée initiale : "+ str(fitness(chromosome1))+ "km")
 
     for i in range(1, nbGeneration+1):
         print("Génération " +str(i))
 
 
-def comparaisonGen(chromosome1, chromosome2, chromosome3):
+def comparaisonGen(chromosome1, chromosome2):
     distance1 = fitness(chromosome1)
     distance2 = fitness(chromosome2)
-    distance3 = fitness(chromosome3)
 
-    if distance1 < distance3:
-        chromosome1 = chromosome3
-    elif distance2 < distance3:
-        chromosome2 = chromosome2
+    if distance1 > distance2:
+        chromosome1 = chromosome2
     
-    return chromosome1, chromosome2
+    return chromosome1
 
-
-
-        
-
-        
-
-matrice = generate_matrice(50, 50)
-complete_matrice(matrice, len(matrice[0]))
+matrice = generate_matrice(1000, 1000)
+complete_matrice(matrice, 1000)
+complete_point(matrice)
 organize_matrice(matrice)
 #affiche_matrice(matrice)
-#dico = info_matrice(matrice)
+dico = dijkstra_matrice(matrice)
+_dico = dico_matrice(matrice)
+
+
+algoGenetique(500, matrice)
+
+print(dico)
+print(_dico)
 
 
 
-start = time.time() #Début du timer
+# Code
 
-algoGenetique(50, matrice)
-
-print("Distance initiale : "+ str(distance))
-
-chromosome = mutation(chromosome1, 100)  #100 = ProbMutation
-
-distance = fitness(chromosome)
-print("Distance après mutation : "+ str(distance))
-
-afficheTournee(chromosome)
-
-
-
-'''G = GraphVisualization()
+G = GraphVisualization()
 
 
 for sommet in range(len(matrice)):
@@ -271,8 +307,10 @@ for sommet in range(len(matrice)):
     for v in voisins:
         G.addEdge(sommet, v)
     
-    
-G.visualize()'''
+G.visualize()
 
 
-print(time.time() - start) #Affichage du temps en seconde
+matrice2 = generate_matrice(1000, 1000)
+
+
+
