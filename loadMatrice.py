@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 class GraphVisualization:
+
    
     def __init__(self):
           
@@ -50,13 +51,14 @@ open_file = open("C:\\Users\\Utilisateur\\Desktop\\matrice.pkl", "rb")
 matrice = pickle.load(open_file)
 open_file.close()   
 
-city = [2, 526, 852, 937] 
+#city = [2, 526, 852, 937] 
+city = [22, 586, 752, 837] 
 
 for elem in city:
     for j in range(len(matrice)):
         matrice2[elem][j] = matrice[elem][j]
 
-list1 = []
+"""list1 = []
 for elem in city:
   for j in range(len(matrice)):
     if matrice2[elem][j] != 0:
@@ -81,18 +83,14 @@ for elem in new_list2:
   for j in range(len(matrice)):
     if matrice[elem][j] != 0:
         for k in range(len(matrice)):
-            matrice2[j][k] = matrice[j][k]
-     
-for sommet in range(len(matrice2)):
-    voisins = voisinsSommetGrapheMatrice(matrice2, sommet)      # on procède en deux temps, car
-    print("sommet", str(sommet), ":", str([v for v in voisins])) # les indices commencent à 0 
+            matrice2[j][k] = matrice[j][k]"""
 
 G = GraphVisualization()
 
 
 for sommet in range(len(matrice2)):
     voisins = voisinsSommetGrapheMatrice(matrice2, sommet)      # on procède en deux temps, car
-    print("sommet", str(sommet), ":", str([v for v in voisins])) # les indices commencent à 0
+    #print("sommet", str(sommet), ":", str([v for v in voisins])) # les indices commencent à 0
     for v in voisins:
         G.addEdge(sommet, v)
     

@@ -1,3 +1,4 @@
+from turtle import position
 import numpy as np
 from random import randint, randrange
 import random
@@ -5,7 +6,7 @@ from numpy.random import choice
 import copy
 import networkx as nx
 import matplotlib.pyplot as plt
-import pickle
+from dijkstra import *
    
   
 # Defining a Class
@@ -108,7 +109,7 @@ def organize_matrice(matrice):
         for j in range(i+1, len(matrice)):
             matrice[j][i] = matrice [i][j]                      
             
-def info_matrice(matrice):
+def dico_matrice(matrice):
     _map = {}
     _list = []
 
@@ -141,33 +142,32 @@ def info_matrice(matrice):
         _map[i] = copy.deepcopy(_list)
     return _map
 
+def dijkstra_matrice(matrice):
+    _map = {}
 
+    dico = {}
+    
+    for i in range(0, len(matrice)):
+        for j in range(0, len(matrice)):
+            if matrice[i][j] != 0:
+                dico.update( {j : matrice[i][j][1]}) 
+        _map[i] = copy.deepcopy(dico)
+        dico = {}
+    return _map
 
-matrice = generate_matrice(1000, 1000)
-complete_matrice(matrice, 1000)
+matrice = generate_matrice(10, 10)
+complete_matrice(matrice, 10)
 organize_matrice(matrice)
 #affiche_matrice(matrice)
-dico = info_matrice(matrice)
+dico = dijkstra_matrice(matrice)
+_dico = dico_matrice(matrice)
 
+print(dico)
+print(_dico)
 
-
-#print(dico)
-
-#with open('C:\\Users\\Utilisateur\\Desktop\\myfile.csv', 'w', newline='') as file:
-    #mywriter = csv.writer(file, delimiter=',')
-    #mywriter.writerows(matrice)
-"""
-with open("C:\\Users\\Utilisateur\\Desktop\\matrice.txt", 'w') as f:
-    for s in matrice:
-        f.write(str(s) + '\n')
-"""
-
-open_file = open("C:\\Users\\Utilisateur\\Desktop\\matrice.pkl", "wb")
-pickle.dump(matrice, open_file)
-open_file.close()
 
 # Code
-G = GraphVisualization()
+"""G = GraphVisualization()
 
 
 for sommet in range(len(matrice)):
@@ -176,9 +176,9 @@ for sommet in range(len(matrice)):
     for v in voisins:
         G.addEdge(sommet, v)
     
-#G.visualize()
+G.visualize()
 
-matrice2 = generate_matrice(1000, 1000)
+matrice2 = generate_matrice(1000, 1000)"""
 
 
 
