@@ -45,7 +45,7 @@ def voisinsSommetGrapheMatrice(matrice, sommet):
 
 def field(matrice, i, j):
     inf = 1
-    sup = 50
+    sup = 100
     _cost_essence = 1.80
     
     field = []
@@ -211,7 +211,7 @@ def mutation(chromosome):
 def generateTournee(tailleMatrice, startTournee):
     tournee = []
     
-    tailleTournee = 10 #random.randint(1, len(tailleMatrice)/2)
+    tailleTournee = 12 #random.randint(1, len(tailleMatrice)/2)
     List = [i for i in range(0, len(tailleMatrice))]
     List.remove(int(startTournee))
     for j in range(tailleTournee):
@@ -255,6 +255,15 @@ def fitness(chromosome):
                 pass
     return distance
 
+def comparaisonGen(chromosome1, chromosome2):
+    distance1 = fitness(chromosome1)
+    distance2 = fitness(chromosome2)
+
+    if distance1 > distance2:
+        chromosome1 = chromosome2
+    
+    return chromosome1
+
 def algoGenetique(nbGeneration, matrice):
     startTournee = input("Entrez le point de départ : ") 
 
@@ -269,16 +278,23 @@ def algoGenetique(nbGeneration, matrice):
 
     for i in range(1, nbGeneration+1):
         print("Génération " +str(i))
+        chromosome2 = mutation(chromosome1)
+        #chromosome1 = comparaisonGen(chromosome1, chromosome2)
+        distance1 = fitness(chromosome1)
+        distance2 = fitness(chromosome2)
+
+        if distance1 > distance2:
+            chromosome1 = chromosome2
+
+        distance = fitness(chromosome1)
+        print("Chemin actuel :" + str(afficheTournee(chromosome1)))
+        print("Distance total tournée actuel : "+ str(distance) + "km")
+        distanceTabl.append(distance)
 
 
-def comparaisonGen(chromosome1, chromosome2):
-    distance1 = fitness(chromosome1)
-    distance2 = fitness(chromosome2)
 
-    if distance1 > distance2:
-        chromosome1 = chromosome2
-    
-    return chromosome1
+
+
 
 matrice = generate_matrice(1000, 1000)
 complete_matrice(matrice, 1000)
@@ -288,17 +304,16 @@ organize_matrice(matrice)
 dico = dijkstra_matrice(matrice)
 _dico = dico_matrice(matrice)
 
+distanceTabl = []
 
 algoGenetique(500, matrice)
 
-print(dico)
-print(_dico)
-
-
+plt.plot(distanceTabl)
+plt.show()
 
 # Code
 
-G = GraphVisualization()
+'''G = GraphVisualization()
 
 
 for sommet in range(len(matrice)):
@@ -310,7 +325,7 @@ for sommet in range(len(matrice)):
 G.visualize()
 
 
-matrice2 = generate_matrice(1000, 1000)
+matrice2 = generate_matrice(1000, 1000)'''
 
 
 
