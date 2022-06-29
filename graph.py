@@ -167,7 +167,7 @@ print(_dico)
 
 
 # Code
-"""G = GraphVisualization()
+G = GraphVisualization()
 
 
 for sommet in range(len(matrice)):
@@ -177,6 +177,8 @@ for sommet in range(len(matrice)):
         G.addEdge(sommet, v)
     
 G.visualize()
+
+"""
 
 matrice2 = generate_matrice(1000, 1000)"""
 
