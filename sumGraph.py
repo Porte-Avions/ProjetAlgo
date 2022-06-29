@@ -7,12 +7,15 @@ from itertools import combinations
 def completMatrice(lenght, city):
 
     matrice_complet = generate_matrice(len(city), lenght)
+    
+    liste = []
 
     temp = combinations(city, 2)
 
     for i in list(temp):
         longueur,chemin = dij_rec(dico, i[0], i[1])
         print('Plus court chemin de ',i,  'est: ',chemin)
+        liste.append(chemin)
         champ = []
         dist = 0
         time = 0
@@ -40,13 +43,26 @@ def completMatrice(lenght, city):
         x = city[j]
         matrice_complet[j][x] = 1
         
+    for l in range(len(liste)):
+        ch = []
+        ch2 = []
+        for m in range(1, len(liste[l])-1):
+            #print(liste[l][m])
+            ch.append(liste[l][m])
+        print('Le chemin de', liste[l][0], 'à', liste[l][len(liste[l])-1], 'est: ', ch)
+        for i in reversed(ch):
+            ch2.append(i)
+        print('Le chemin de', liste[l][len(liste[l])-1], 'à', liste[l][0], 'est: ', ch2)
+        ch.clear()
+        ch2.clear()
+        
+    return matrice_complet
+        
 
-city = [22, 782, 456, 810, 892, 52, 825, 320, 952, 853, 742, 12, 259, 963, 201, 542, 568, 745, 123, 529] 
-completMatrice(1000, city)
-    
-"""affiche_matrice(matrice_complet)
+city = [22, 782, 456, 810] 
+matrice_complet = completMatrice(1000, city)
 
-G = GraphVisualization()
+"""G = GraphVisualization()
 
 for sommet in range(len(matrice_complet)):
     voisins = voisinsSommetGrapheMatrice(matrice_complet, sommet)      # on procède en deux temps, car
@@ -56,9 +72,10 @@ for sommet in range(len(matrice_complet)):
         G.addEdge(s, v)
     
 G.visualize()"""
+    
+"""affiche_matrice(matrice_complet)
+
+"""
 
 
 
-test={
-    22:{ 782: [437, 638, 24, 888, 598, 630, 420, 293, 233, 445, 469, 814, 58]}
-}

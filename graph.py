@@ -43,9 +43,9 @@ def voisinsSommetGrapheMatrice(matrice, sommet):
         [i for i, value in enumerate(liste) if liste[i] != 0] #SOLUTION
     return voisins
 
-def field(matrice, i, j):
-    inf = 1
-    sup = 50
+def field(matrice, i, j, inferieur, superieur):
+    inf = inferieur
+    sup = superieur
     _cost_essence = 1.80
     
     field = []
@@ -93,20 +93,20 @@ def complete_matrice(matrice, M):
         try:
             for j in _element:
                 if i != j :
-                    field(matrice, i, j)
+                    field(matrice, i, j, 1, 50)
         except:
             _element = []
             _element = random.sample(range(M), _nb_element)
         finally:
             for j in _element:
                 if i != j :
-                    field(matrice, i, j)
+                    field(matrice, i, j, 1, 50)
         _element = []        
     return matrice
 
 def complete_point(matrice):
     for i in range(1, len(matrice)):
-        field(matrice, 0, i)
+        field(matrice, 0, i, 50, 100)
 
 def organize_matrice(matrice):
     for i in range(0, len(matrice)):
@@ -173,7 +173,7 @@ print(_dico)
 
 # Code
 
-G = GraphVisualization()
+"""G = GraphVisualization()
 
 
 for sommet in range(len(matrice)):
@@ -182,7 +182,7 @@ for sommet in range(len(matrice)):
     for v in voisins:
         G.addEdge(sommet, v)
     
-G.visualize()
+G.visualize()"""
 
 
 matrice2 = generate_matrice(1000, 1000)
