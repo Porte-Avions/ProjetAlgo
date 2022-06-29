@@ -101,8 +101,12 @@ def complete_matrice(matrice, M):
             for j in _element:
                 if i != j :
                     field(matrice, i, j)
-        _element = []
+        _element = []        
     return matrice
+
+def complete_point(matrice):
+    for i in range(1, len(matrice)):
+        field(matrice, 0, i)
 
 def organize_matrice(matrice):
     for i in range(0, len(matrice)):
@@ -157,6 +161,7 @@ def dijkstra_matrice(matrice):
 
 matrice = generate_matrice(1000, 1000)
 complete_matrice(matrice, 1000)
+complete_point(matrice)
 organize_matrice(matrice)
 #affiche_matrice(matrice)
 dico = dijkstra_matrice(matrice)
@@ -167,6 +172,7 @@ print(_dico)
 
 
 # Code
+
 G = GraphVisualization()
 
 
@@ -178,9 +184,8 @@ for sommet in range(len(matrice)):
     
 G.visualize()
 
-"""
 
-matrice2 = generate_matrice(1000, 1000)"""
+matrice2 = generate_matrice(1000, 1000)
 
 
 
