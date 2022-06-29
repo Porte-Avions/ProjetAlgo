@@ -8,7 +8,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from dijkstra import *
 from itertools import combinations
-
+import sys
+sys.setrecursionlimit(5000)
 # Defining a Class
 class GraphVisualization:
    
@@ -45,7 +46,7 @@ def voisinsSommetGrapheMatrice(matrice, sommet):
 
 def field(matrice, i, j):
     inf = 1
-    sup = 100
+    sup = 50
     _cost_essence = 1.80
     
     field = []
@@ -198,20 +199,20 @@ def completMatriceTournee(lenght, city):
     return matrice_complet
 
 def mutation(chromosome):
-    
+    chromosome3 = copy.copy(chromosome)
     if 100 >= random.randint(0,100):
-        firstGene = random.randint(1, len(chromosome)-2)
-        secondGene = random.randint(1, len(chromosome)-2)
-        chromosome[firstGene], chromosome[secondGene] = chromosome[secondGene], chromosome[firstGene]
+        firstGene = random.randint(1, len(chromosome3)-2)
+        secondGene = random.randint(1, len(chromosome3)-2)
+        chromosome3[firstGene], chromosome3[secondGene] = chromosome3[secondGene], chromosome3[firstGene]
 
-        return chromosome
+        return chromosome3
 
-    return chromosome
+    return chromosome3
 
 def generateTournee(tailleMatrice, startTournee):
     tournee = []
     
-    tailleTournee = 12 #random.randint(1, len(tailleMatrice)/2)
+    tailleTournee = 50 #random.randint(1, len(tailleMatrice)/2)
     List = [i for i in range(0, len(tailleMatrice))]
     List.remove(int(startTournee))
     for j in range(tailleTournee):
@@ -239,8 +240,10 @@ def afficheTournee(chromosome):
                 break
     return tournee
 
-def fitness(chromosome):
+def fitnessDistance(chromosome):
     distance = 0
+    temps = 0
+    cout = 0
     actuel = 0
     dest = 0
     for i in range(len(chromosome)):
@@ -251,13 +254,15 @@ def fitness(chromosome):
                 if chromosome[i+1][j] == 1:
                     dest = j
                     distance += chromosome[i][dest][0]
+                    temps += chromosome[i][dest][1]
+                    cout += chromosome[i][dest][2]
             except:
                 pass
-    return distance
+    return distance,temps,cout
 
 def comparaisonGen(chromosome1, chromosome2):
-    distance1 = fitness(chromosome1)
-    distance2 = fitness(chromosome2)
+    distance1 = fitnessDistance(chromosome1)
+    distance2 = fitnessDistance(chromosome2)
 
     if distance1 > distance2:
         chromosome1 = chromosome2
@@ -274,30 +279,84 @@ def algoGenetique(nbGeneration, matrice):
     chromosome1.append(index0)
 
     print("Chemin initiale : " + str(afficheTournee(chromosome1)))
-    print("Distance total tournée initiale : "+ str(fitness(chromosome1))+ "km")
+    print("Distance total tournée initiale : "+ str(fitnessDistance(chromosome1))+ "km")
 
     for i in range(1, nbGeneration+1):
         print("Génération " +str(i))
         chromosome2 = mutation(chromosome1)
-        #chromosome1 = comparaisonGen(chromosome1, chromosome2)
-        distance1 = fitness(chromosome1)
-        distance2 = fitness(chromosome2)
+
+        distance1,temps1, cout1 = fitnessDistance(chromosome1)
+        distance2,temps2, cout2 = fitnessDistance(chromosome2)
 
         if distance1 > distance2:
             chromosome1 = chromosome2
 
-        distance = fitness(chromosome1)
+        distance1,temps1, cout1 = fitnessDistance(chromosome1)
+
         print("Chemin actuel :" + str(afficheTournee(chromosome1)))
-        print("Distance total tournée actuel : "+ str(distance) + "km")
-        distanceTabl.append(distance)
+        print("Distance total tournée actuel : "+ str(distance1) + "km")
 
+        distanceTabl.append(fitnessDistance(chromosome1))
 
+    for j in range(1, nbGeneration+1):
+        print("Génération " +str(j))
 
+        chromosome2 = mutation(chromosome1)
 
+        distance3,temps3, cout3 = fitnessDistance(chromosome1)
 
+        distance4,temps4, cout4 = fitnessDistance(chromosome2)
 
-matrice = generate_matrice(1000, 1000)
-complete_matrice(matrice, 1000)
+        if temps3 > temps4:
+            chromosome1 = chromosome2
+
+        distance3,temps3, cout3 = fitnessDistance(chromosome1)
+
+        print("Chemin actuel :" + str(afficheTournee(chromosome1)))
+
+        print("Temps total tournée actuel : "+ str(temps3) + "km")
+        
+        tempsTabl.append(fitnessDistance(chromosome1))
+
+    for k in range(1, nbGeneration+1):
+        print("Génération " +str(k))
+
+        chromosome2 = mutation(chromosome1)
+
+        distance5,temps5, cout5 = fitnessDistance(chromosome1)
+
+        distance6,temps6, cout6 = fitnessDistance(chromosome2)
+
+        if cout5 > cout6:
+            chromosome1 = chromosome2
+
+        distance5,temps5, cout5 = fitnessDistance(chromosome1)
+
+        print("Chemin actuel :" + str(afficheTournee(chromosome1)))
+
+        print("Cout total tournée actuel : "+ str(cout5) + "km")
+        
+        coutTabl.append(fitnessDistance(chromosome1))
+
+    print("----------------------------------------------------")
+    print("Meilleur chemin trouver par rapport à la distance : "+ str(afficheTournee(chromosome1)))
+    print("Distance : "+ str(distance1) + "Km")
+    print("Temps : "+ str(temps1) + "min")
+    print("Cout : "+ str(cout1) + "€")
+    print("----------------------------------------------------")
+    print("Meilleur chemin trouver par rapport au temps : "+ str(afficheTournee(chromosome1)))
+    print("Distance : "+ str(distance3) + "Km")
+    print("Temps : "+ str(temps3) + "min")
+    print("Cout : "+ str(cout3) + "€")
+    print("----------------------------------------------------")
+    print("Meilleur chemin trouver par rapport au cout : "+ str(afficheTournee(chromosome1)))
+    print("Distance : "+ str(distance5) + "Km")
+    print("Temps : "+ str(temps5) + "min")
+    print("Cout : "+ str(cout5) + "€")
+    print("----------------------------------------------------")
+
+matrice = generate_matrice(100, 100)
+complete_matrice(matrice, 100)
 complete_point(matrice)
 organize_matrice(matrice)
 #affiche_matrice(matrice)
@@ -305,11 +364,28 @@ dico = dijkstra_matrice(matrice)
 _dico = dico_matrice(matrice)
 
 distanceTabl = []
+tempsTabl = []
+coutTabl = []
 
-algoGenetique(500, matrice)
+algoGenetique(1000, matrice)
 
+plt.figure(1)
+plt.subplot(1, 2, 1)
 plt.plot(distanceTabl)
+plt.title('Optimisation distance')
+plt.xlabel('Nombre de générations')
+plt.subplot(2, 2, 2)
+plt.plot(tempsTabl)
+plt.title('Optimisation temps')
+plt.xlabel('Nombre de générations')
+plt.subplot(2, 2, 4)
+plt.plot(coutTabl)
+plt.title('Optimisation prix')
+plt.xlabel('Nombre de générations')
+
+
 plt.show()
+
 
 # Code
 
