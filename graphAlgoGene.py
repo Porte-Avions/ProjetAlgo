@@ -7,6 +7,8 @@ import sys
 import os
 sys.setrecursionlimit(5000)
 
+traffic = False
+
 
 def mutation(chromosome):
     chromosome3 = copy.copy(chromosome)
@@ -51,11 +53,14 @@ def afficheTournee(chromosome):
     return tournee
 
 def fitnessDistance(chromosome):
-    distance = 0
+    distance =0
     temps = 0
     cout = 0
     actuel = 0
     dest = 0
+    
+    heure = 0
+    heure_passe = 0
     for i in range(len(chromosome)):
         for j in range(0, len(chromosome[0])):
             if chromosome[i][j] == 1:
@@ -64,7 +69,17 @@ def fitnessDistance(chromosome):
                 if chromosome[i+1][j] == 1:
                     dest = j
                     distance += chromosome[i][dest][0]
-                    temps += chromosome[i][dest][1]
+                    if traffic:
+                        if(heure+300 <= heure_passe <= heure+400) :
+                                temps += chromosome[i][dest][1] * round(random.uniform(1.1,1.7),1)
+                                heure_passe = temps
+                        elif heure_passe >= heure+400:
+                            heure = heure_passe
+                        else:
+                            temps += chromosome[i][dest][1]
+                            heure_passe += temps
+                    else:
+                        temps += chromosome[i][dest][1]
                     cout += chromosome[i][dest][2]
             except:
                 pass

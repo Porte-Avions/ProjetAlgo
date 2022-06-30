@@ -162,6 +162,9 @@ def completMatriceTournee(lenght, city):
     
     liste = []
     
+    heure = 0
+    heure_passe = 0
+    
     for i in reversed(liste):
             liste.append(i)
 
