@@ -87,6 +87,8 @@ def algoGenetique(nbGeneration, matrice):
     chromosome1, liste = completMatriceTournee(len(matrice), tournee)
     index0 = chromosome1[0]
     chromosome1.append(index0)
+    chromosome5 = copy.copy(chromosome1)
+    chromosome3 = copy.copy(chromosome1)
     
     print("Chemin initiale : " + str(afficheTournee(chromosome1)))
     print("Distance total tournée initiale : "+ str(fitnessDistance(chromosome1))+ "km")
@@ -110,7 +112,6 @@ def algoGenetique(nbGeneration, matrice):
 
     for j in range(1, nbGeneration+1):
         print("Génération " +str(j))
-        chromosome3 = copy.copy(chromosome1)
 
         chromosome2 = mutation(chromosome3)
 
@@ -131,7 +132,6 @@ def algoGenetique(nbGeneration, matrice):
 
     for k in range(1, nbGeneration+1):
         print("Génération " +str(k))
-        chromosome5 = copy.copy(chromosome1)
 
         chromosome2 = mutation(chromosome5)
 
